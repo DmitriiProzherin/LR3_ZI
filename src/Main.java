@@ -1,21 +1,13 @@
-import java.util.Arrays;
 
 public class Main {
     public static void main(String[] args) {
-        String testBlock = "abcdefgh";
-
+        PlainText text = new PlainText("abcdefgh");
         SecretKey key = new SecretKey();
-        DES des = new DES(key);
+        DES des = new DES();
 
-        des.encrypt(testBlock);
-        des.decrypt(testBlock);
+        des.encrypt(text, key);
+        des.decrypt(text, key);
 
-
-
-        Input input = new Input(Utility.stringToBinaryBytes(testBlock));
-
-        System.out.println(Arrays.toString(input.getLeft()));
-        System.out.println(Arrays.toString(input.getRight()));
 
     }
 }
