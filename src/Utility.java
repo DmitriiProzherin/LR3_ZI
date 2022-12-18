@@ -79,4 +79,12 @@ public class Utility {
         return result;
     }
 
+    // Выполняет циклический сдвиг введённого массива влево на n позиций.
+    public static void shiftLeft(boolean[] booleans, int n) {
+        int shiftLength = n % booleans.length;
+        boolean[] temp = booleans.clone();
+
+        System.arraycopy(temp, shiftLength, booleans, 0, booleans.length - shiftLength);
+        System.arraycopy(temp, 0, booleans, booleans.length - shiftLength, booleans.length - (booleans.length - shiftLength));
+    }
 }

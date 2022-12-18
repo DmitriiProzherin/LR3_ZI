@@ -1,16 +1,21 @@
 import java.util.ArrayList;
+import java.util.Arrays;
 
 public class SecretKey {
 
-    boolean[] key_56_bit  = new boolean[56];
-    boolean[][] keyList = new boolean[16][48];
-
-
+    private final boolean[][] keysArr = new boolean[16][48];
+    private boolean[] key_56_bit;
     SecretKey(boolean[] initKey) {
+        assert initKey.length == 64 : "длина ключа должна быть в 64 бита";
+
         key_56_bit = initTransform(initKey);
-        ArrayList<boolean[]> key_28_bit_arr = Utility.splitBlockIntoParts(key_56_bit, 2);
 
-
+        for (int i = 0; i < 16; i++) {
+            ArrayList<boolean[]> key_28_bit_arr = Utility.splitBlockIntoParts(key_56_bit, 2);
+            Utility.shiftLeft(key_28_bit_arr.get(0), shiftLength(i));
+            Utility.shiftLeft(key_28_bit_arr.get(1), shiftLength(i));
+            keysArr[i] = finalTransform(Utility.concat(key_28_bit_arr.get(0), key_28_bit_arr.get(1)));
+        }
 
     }
 
@@ -32,7 +37,7 @@ public class SecretKey {
     }
 
     private boolean[] finalTransform(boolean[] in) {
-        assert in.length == 48 : "Длина ключа для финальной перестановки должна быть 48 бит.";
+        assert in.length == 56 : "Длина ключа для финальной перестановки должна быть 56 бит.";
 
         byte[] mixVector = new byte[] {
                 14, 17, 11, 24,  1,  5,  3, 28,
@@ -47,6 +52,30 @@ public class SecretKey {
 
     }
 
+    private int shiftLength(int iterationNumber) {
+        assert iterationNumber >= 0 && iterationNumber <= 15;
 
+        return switch (iterationNumber) {
+            case 0, 1, 8, 15 -> 1;
+            case 2, 3, 4, 5, 6, 7, 9, 10, 11, 12, 13, 14 -> 2;
+            default -> -1;
+        };
+    }
+
+    public boolean[][] getKeysArr() {
+        return keysArr;
+    }
+
+    public void printKeysArr() {
+        for (int i = 0; i < 16; i++) {
+            System.out.println(i + "-ый ключ. Длина равна 48 бит." );
+            System.out.println(Arrays.toString(keysArr[i]));
+        }
+    }
+
+    public void print_56_bit_key() {
+        System.out.println("56-битный ключ после перестановки исходного ключа");
+        System.out.println(Arrays.toString(key_56_bit));
+    }
 
 }
