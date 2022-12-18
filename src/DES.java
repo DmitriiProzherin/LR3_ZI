@@ -115,7 +115,7 @@ public class DES {
         return splitBlockIntoParts(b, 2).get(1);
     }
 
-    // Выполнение 1-го раунда шифроваия блока
+    // Выполнение одного раунда шифрования блока
     private void cryptoRound(boolean [] left, boolean[] right, boolean[] rKey) {
         assert left.length == 32 : "Длина левого блока на входе должна быть 32 бита.";
         assert right.length == 32 : "Длина правого блока на входе должна быть 32 бита.";
