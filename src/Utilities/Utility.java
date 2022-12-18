@@ -1,3 +1,5 @@
+package Utilities;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 
@@ -68,7 +70,7 @@ public class Utility {
 
     // Применение xor к двум массивам битов одинаковой длины.
     public static boolean[] xor(boolean[] block1, boolean[] block2) {
-        assert block1.length != block2.length : "Блоки должны быть равной длины.";
+        assert block1.length == block2.length : "Блоки должны быть равной длины.";
 
         boolean[] result = new boolean[block1.length];
 
@@ -97,5 +99,11 @@ public class Utility {
         return null;
     }
 
-
+    public static void printBoolArray(boolean[] arr) {
+        for (boolean b : arr) {
+            if (b) System.out.print("1");
+            else System.out.print("0");
+        }
+        System.out.println();
+    }
 }

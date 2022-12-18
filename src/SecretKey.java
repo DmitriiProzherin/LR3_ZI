@@ -1,5 +1,6 @@
+import Utilities.Utility;
+
 import java.util.ArrayList;
-import java.util.Arrays;
 
 public class SecretKey {
 
