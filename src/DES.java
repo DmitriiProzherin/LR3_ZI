@@ -1,5 +1,3 @@
-import org.jetbrains.annotations.NotNull;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 
@@ -107,12 +105,12 @@ public class DES {
         return resultList;
     }
 
-    // Получить левую часть блока.
+    // Выделение левой части блока.
     private boolean[] getLeftPart(boolean[] b) {
         return splitBlockIntoParts(b, 2).get(0);
     }
 
-    // Получить правую часть блока.
+    // Выделение правой части блока.
     private boolean[] getRightPart(boolean[] b) {
         return splitBlockIntoParts(b, 2).get(1);
     }
@@ -129,18 +127,36 @@ public class DES {
 
     }
 
-    // Применение функции Фейстеля
+    // Применение функции Фейстеля.
     private boolean[] feistelFunc(boolean[] block, boolean[] key) {
         assert block.length == 32 : "Длина блока в функции Фейстеля должна быть 32 бита.";
         assert key.length == 48 : "Длина ключа в функции Фейстеля должна быть 48 бит.";
 
-        boolean[] result = new boolean[32];
+        boolean[] extendedBlock = xorBlocks(ext(block), key);
+        boolean[] shrinkedBlock = sTransform(extendedBlock);
 
+        return permutation(shrinkedBlock);
+    }
+
+    // Перестановка в функции Фейстеля.
+    private boolean[] permutation(boolean[] resBlock) {
+        return resBlock;
+    }
+
+    // Применение функции S-трансформации к расширенному блоку.
+    private boolean[] sTransform(boolean[] extendedBlock) {
+        return new boolean[0];
+    }
+
+    // Расширение блока до размера в 48 бит.
+    private boolean[] ext(boolean[] booleans) {
+        assert booleans.length == 32 : "Длина блока для расширения должна быть 32 бита";
+        boolean[] result = new boolean[48];
 
         return result;
     }
 
-    // Конкатенация двух булевых массивов в 1 результирующий массив
+    // Конкатенация двух булевых массивов в 1 результирующий массив.
     private boolean[] concat(boolean[] arr1, boolean[] arr2) {
         boolean[] result = Arrays.copyOf(arr1, arr1.length + arr2.length);
         System.arraycopy(arr2, 0, result, arr1.length, arr2.length);
