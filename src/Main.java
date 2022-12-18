@@ -4,17 +4,14 @@ import java.util.Arrays;
 public class Main {
     public static void main(String[] args) {
 
-        boolean[] b_key = new boolean[] {
-            true, true, true, true, true, true, true, true,
-            true, true, true, true, true, true, true, true,
-            true, true, true, true, true, true, true, true,
-            true, true, true, true, true, true, true, true,
-            true, true, true, true, true, true, true, true,
-            true, true, true, true, true, true, true, true,
-            true, true, true, true, true, true, true, true,
-            true, true, true, true, true, true, true, true,
-            true, true, true, true, true, true, true, true, true
-        };
+        String str = "0001001100110100010101110111100110011011101111001101111111110001";
+
+        boolean[] b_key = new boolean[64];
+
+        for (int i = 0; i < str.length(); i++) {
+            b_key[i] = (str.charAt(i) == '1');
+        }
+
 
         PlainText text = new PlainText("abcdefgh");
         SecretKey key = new SecretKey(b_key);

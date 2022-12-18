@@ -67,7 +67,7 @@ public class Utility {
     }
 
     // Применение xor к двум массивам битов одинаковой длины.
-    public static boolean[] xorBlocks(boolean[] block1, boolean[] block2) {
+    public static boolean[] xor(boolean[] block1, boolean[] block2) {
         assert block1.length != block2.length : "Блоки должны быть равной длины.";
 
         boolean[] result = new boolean[block1.length];
@@ -87,4 +87,15 @@ public class Utility {
         System.arraycopy(temp, shiftLength, booleans, 0, booleans.length - shiftLength);
         System.arraycopy(temp, 0, booleans, booleans.length - shiftLength, booleans.length - (booleans.length - shiftLength));
     }
+
+
+    public static String[] splitToBlocks(String str) {
+        int blocksAmount = str.length() / 8;
+        int addedAmount = str.length() - blocksAmount * 8;
+        String[] result = new String[blocksAmount];
+
+        return null;
+    }
+
+
 }

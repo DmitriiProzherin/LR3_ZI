@@ -1,41 +1,43 @@
-import java.util.ArrayList;
 import java.util.Arrays;
 
 public class DES {
 
     public String encrypt(PlainText text, SecretKey key) {
-        
+
+
+
+
+
         return null;
+    }
+
+    // Шифровка одного блока.
+    public boolean[] encryptBlock(boolean[] inputBlock, SecretKey key) {
+        assert inputBlock.length == 64 : "Длина одного кодируемого блока равна 64 бита.";
+
+        boolean[][] keysArr = key.getKeysArr();
+        boolean[] encryptedBlock = new boolean[64];
+
+
+        inputBlock = IP(inputBlock);
+        boolean[] left = Utility.getLeftPart(inputBlock);
+        boolean[] right = Utility.getRightPart(inputBlock);
+        boolean[] nextLeft, nextRight;
+
+
+        for (int i = 0; i < 16; i++) {
+        nextLeft = right.clone();
+        nextRight = Utility.xor(left, feistel(right, keysArr[i]));
+        left = nextLeft.clone();
+        right = nextRight.clone();
+        }
+
+        return FP(Utility.concat(right, left));
     }
 
     public String decrypt(PlainText text, SecretKey key) {
 
         return null;
-    }
-    
-    
-    private String[] splitToBlocks(String str) {
-        int blocksAmount = str.length() / 8;
-        int addedAmount = str.length() - blocksAmount * 8;
-        String[] result = new String[blocksAmount];
-        
-        return null;
-    }
-
-
-    private boolean[] encryptBlock(boolean[] block, boolean[] key) {
-        block = IP(block);
-
-        boolean[] left = Utility.getLeftPart(block);
-        boolean[] right = Utility.getRightPart(block);
-        boolean[] initKey = Arrays.copyOfRange(key, 0, 48);
-
-        //ещё 15 раундов
-        cryptoRound(left, right, initKey);
-
-        block = FP(Utility.concat(right, left));
-
-        return block;
     }
 
     // Конечная перестановка, обратная начальной перестановке.
@@ -79,17 +81,17 @@ public class DES {
         assert rKey.length == 48 : "Длина ключа раунда должна быть 48 бит.";
 
         boolean[] tempLeft = right.clone();
-        right = Utility.xorBlocks(left, feistelFunc(right, rKey));
+        right = Utility.xor(left, feistel(right, rKey));
         left = tempLeft;
 
     }
 
     // Применение функции Фейстеля.
-    private boolean[] feistelFunc(boolean[] block, boolean[] key) {
+    private boolean[] feistel(boolean[] block, boolean[] key) {
         assert block.length == 32 : "Длина блока в функции Фейстеля должна быть 32 бита.";
         assert key.length == 48 : "Длина ключа в функции Фейстеля должна быть 48 бит.";
 
-        boolean[] extendedBlock = Utility.xorBlocks(ext(block), key);
+        boolean[] extendedBlock = Utility.xor(ext(block), key);
         boolean[] shrinkedBlock = sTransform(extendedBlock);
 
         return permutation(shrinkedBlock);
@@ -122,8 +124,5 @@ public class DES {
 
         return Utility.mix(booleans, 48, mixVector);
     }
-
-
-
 
 }
