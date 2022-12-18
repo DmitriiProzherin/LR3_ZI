@@ -26,93 +26,50 @@ public class DES {
     private boolean[] encryptBlock(boolean[] block, boolean[] key) {
         block = IP(block);
 
-        boolean[] left = getLeftPart(block);
-        boolean[] right = getRightPart(block);
+        boolean[] left = Utility.getLeftPart(block);
+        boolean[] right = Utility.getRightPart(block);
         boolean[] initKey = Arrays.copyOfRange(key, 0, 48);
 
         //ещё 15 раундов
         cryptoRound(left, right, initKey);
 
-        block = FP(concat(right, left));
+        block = FP(Utility.concat(right, left));
 
         return block;
     }
 
     // Конечная перестановка, обратная начальной перестановке.
-    private boolean[] FP(boolean[] block) {
-        return block;
-    }
-
-    // Применение xor к двум массивам битов одинаковой длины.
-    private boolean[] xorBlocks(boolean[] block1, boolean[] block2) {
-        assert block1.length != block2.length : "Блоки должны быть равной длины.";
-
-        boolean[] result = new boolean[block1.length];
-
-        for (int i = 0; i < block1.length; i++) {
-            result[i] = block1[i] ^ block2[i];
-        }
-
-        return result;
+    private boolean[] FP(boolean[] inp) {
+        assert inp.length == 64 : "Длина блока для перестановки должна быть 64 бита.";
+        byte[] permVector = new byte[] {
+                40,  8, 48, 16, 56, 24, 64, 32,
+                39,  7, 47, 15, 55, 23, 63, 31,
+                38,  6, 46, 14, 54, 22, 62, 30,
+                37,  5, 45, 13, 53, 21, 61, 29,
+                36,  4, 44, 12, 52, 20, 60, 28,
+                35,  3, 43, 11, 51, 19, 59, 27,
+                34,  2, 42, 10, 50, 18, 58, 26,
+                33,  1, 41,  9, 49, 17, 57, 25
+        };
+        return Utility.mix(inp, 64, permVector);
     }
 
     // Выполнение первоначальной перестановки.
     private boolean[] IP(boolean[] inp) {
         assert inp.length == 64 : "Длина блока для перестановки должна быть 64 бита.";
 
-        boolean[] result = new boolean[64];
-        for (int i = 0; i < 8; i++) {
-            result[i] = inp[58 - i * 8];
-        }
-        for (int i = 8; i < 16; i++) {
-            result[i] = inp[60 - (i - 8) * 8];
-        }
-        for (int i = 16; i < 24; i++) {
-            result[i] = inp[62 - (i - 8 * 2) * 8];
-        }
-        for (int i = 24; i < 32; i++) {
-            result[i] = inp[62 - (i - 8 * 3) * 8];
-        }
-        for (int i = 32; i < 40; i++) {
-            result[i] = inp[57 - (i - 8 * 4) * 8];
-        }
-        for (int i = 40; i < 48; i++) {
-            result[i] = inp[59 - (i - 8 * 5) * 8];
-        }
-        for (int i = 48; i < 56; i++) {
-            result[i] = inp[61 - (i - 8 * 6) * 8];
-        }
-        for (int i = 56; i < 64; i++) {
-            result[i] = inp[63 - (i - 8 * 7) * 8];
-        }
-        return result;
-    }
+        byte[] permVector = new byte[] {
+                58, 50, 42, 34, 26, 18, 10, 2,
+                60, 52, 44, 36, 28, 20, 12, 4,
+                62, 54, 46, 38, 30, 22, 14, 6,
+                64, 56, 48, 40, 32, 24, 16, 8,
+                57, 49, 41, 33, 25, 17,  9, 1,
+                59, 51, 43, 35, 27, 19, 11, 3,
+                61, 53, 45, 37, 29, 21, 13, 5,
+                63, 55, 47, 39, 31, 23, 15, 7
+        };
 
-    // Разбиение блока на n частей.
-    private ArrayList<boolean[]> splitBlockIntoParts(boolean[] block, int n) {
-        assert block.length % 2 == 0 : "Длина блока должна быть чётной.";
-        assert n % 2 == 0 : "Количество частей должно быть чётным.";
-        assert n <= block.length : "Количество частей не должно превышать длину блока.";
-
-        ArrayList<boolean[]> resultList = new ArrayList<>();
-        int length = block.length / n;
-
-        for (int i = 0; i < n; i++) {
-            resultList.add(Arrays.copyOfRange(block, i * length, i * length + length));
-        }
-
-
-        return resultList;
-    }
-
-    // Выделение левой части блока.
-    private boolean[] getLeftPart(boolean[] b) {
-        return splitBlockIntoParts(b, 2).get(0);
-    }
-
-    // Выделение правой части блока.
-    private boolean[] getRightPart(boolean[] b) {
-        return splitBlockIntoParts(b, 2).get(1);
+        return Utility.mix(inp, 64, permVector);
     }
 
     // Выполнение одного раунда шифрования блока
@@ -122,7 +79,7 @@ public class DES {
         assert rKey.length == 48 : "Длина ключа раунда должна быть 48 бит.";
 
         boolean[] tempLeft = right.clone();
-        right = xorBlocks(left, feistelFunc(right, rKey));
+        right = Utility.xorBlocks(left, feistelFunc(right, rKey));
         left = tempLeft;
 
     }
@@ -132,7 +89,7 @@ public class DES {
         assert block.length == 32 : "Длина блока в функции Фейстеля должна быть 32 бита.";
         assert key.length == 48 : "Длина ключа в функции Фейстеля должна быть 48 бит.";
 
-        boolean[] extendedBlock = xorBlocks(ext(block), key);
+        boolean[] extendedBlock = Utility.xorBlocks(ext(block), key);
         boolean[] shrinkedBlock = sTransform(extendedBlock);
 
         return permutation(shrinkedBlock);
@@ -156,12 +113,7 @@ public class DES {
         return result;
     }
 
-    // Конкатенация двух булевых массивов в 1 результирующий массив.
-    private boolean[] concat(boolean[] arr1, boolean[] arr2) {
-        boolean[] result = Arrays.copyOf(arr1, arr1.length + arr2.length);
-        System.arraycopy(arr2, 0, result, arr1.length, arr2.length);
-        return result;
-    }
+
 
 
 }
