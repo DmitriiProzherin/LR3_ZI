@@ -1,13 +1,10 @@
-import Utilities.Utility;
-
 import java.io.BufferedWriter;
-import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.nio.charset.StandardCharsets;
+
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.Collections;
+
 
 import static Utilities.Utility.formatedBoolStringtoString;
 import static java.lang.System.out;
