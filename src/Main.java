@@ -1,6 +1,4 @@
-import java.io.BufferedWriter;
-import java.io.FileWriter;
-import java.io.IOException;
+import java.io.*;
 
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -13,29 +11,39 @@ public class Main {
     public static void main(String[] args) throws IOException {
 
         DES des = new DES();
+        String inputString, key, encryptedString, decryptedString;
+        long time;
 
-        Path inputPath = Path.of("src/input.txt");
-        Path keyPath = Path.of("src/key.txt");
-        Path outputPath = Path.of("src/output.txt");
+        BufferedReader readerInput = new BufferedReader(new FileReader("src/input.txt"));
+        inputString = readerInput.readLine();
+        readerInput.close();
 
-        String key = Files.readString(keyPath);
-        String test = Files.readString(inputPath);
-        String encryptedString, decryptedString;
+        BufferedReader readerKey = new BufferedReader(new FileReader("src/key.txt"));
+        key = readerKey.readLine();
+        readerKey.close();
 
+        BufferedWriter writerEncrypted = new BufferedWriter(new FileWriter("src/encrypted.txt"));
+        time = System.nanoTime();
+        encryptedString = des.encrypt(inputString, key);
+        long encTime = System.nanoTime() - time;
+        writerEncrypted.write(encryptedString);
+        writerEncrypted.close();
 
-        BufferedWriter writer = new BufferedWriter(new FileWriter("src/output.txt"));
-        writer.write(des.encrypt(test, key));
-        writer.close();
+        BufferedReader readerEncrypted = new BufferedReader(new FileReader("src/encrypted.txt"));
+        encryptedString = readerEncrypted.readLine();
+        readerEncrypted.close();
 
-
-        encryptedString = Files.readString(outputPath);
+        BufferedWriter writerDecrypted = new BufferedWriter(new FileWriter("src/decrypted.txt"));
+        time = System.nanoTime();
         decryptedString = des.decrypt(encryptedString, key);
+        long decTime = System.nanoTime() - time;
+        writerDecrypted.write(decryptedString);
+        writerDecrypted.close();
 
 
-
-        out.println("Inp: " + test);
-        out.println("Enc: " + formatedBoolStringtoString(encryptedString));
-        out.println("Dec: " + decryptedString);
+        out.println("Input text: \n" + inputString + "\n");
+        out.println("Encrypting time: " + (double) encTime / 1_000_000_000.0 + ". Result:\n" + formatedBoolStringtoString(encryptedString) + "\n");
+        out.println("Decrypting time: " + (double) decTime / 1_000_000_000.0 + ". Result:\n" + decryptedString + "\n");
 
     }
 }
