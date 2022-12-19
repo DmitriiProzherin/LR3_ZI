@@ -5,13 +5,13 @@ import java.util.Arrays;
 
 public class Utility {
 
-    public static byte[] stringToBinaryBytes(String str) {
+    public static byte[] strToByteArr(String str) {
         StringBuilder resStrB = new StringBuilder();
-        byte[] result = new byte[str.length() * 8];
+        byte[] result = new byte[str.length() * 16];
 
         for (int i = 0; i < str.length(); i++) {
             String s = Integer.toBinaryString(str.charAt(i));
-            resStrB.append("0".repeat(Math.max(0, 8 - s.length())));
+            resStrB.append("0".repeat(Math.max(0, 16 - s.length())));
             resStrB.append(s);
         }
         for (int i = 0; i < result.length; i++) {
@@ -21,6 +21,15 @@ public class Utility {
         return result;
     }
 
+    public static boolean[] byteToBoolArr(byte[] in) {
+        boolean[] result = new boolean[in.length];
+
+        for (int i = 0; i < in.length; i++) {
+            assert in[i] == 1 || in[i] == 0 : "Перевод возможен только для массива из 0 и 1.";
+            result[i] = (in[i] == 1);
+        }
+        return result;
+    }
 
     // Перемешивание элементов в массиве согласно данной матрице.
     public static boolean[] mix(boolean[] inputArr, int resLength, byte[] mixArr) {
@@ -36,8 +45,8 @@ public class Utility {
 
     // Разбиение блока на n частей.
     public static ArrayList<boolean[]> splitBlockIntoParts(boolean[] block, int n) {
-        assert block.length % 2 == 0 : "Длина блока должна быть чётной.";
-        assert n % 2 == 0 : "Количество частей должно быть чётным.";
+       // assert block.length % 2 == 0 : "Длина блока должна быть чётной.";
+       // assert n % 2 == 0 : "Количество частей должно быть чётным.";
         assert n <= block.length : "Количество частей не должно превышать длину блока.";
 
         ArrayList<boolean[]> resultList = new ArrayList<>();
@@ -111,7 +120,7 @@ public class Utility {
         System.out.println();
     }
 
-    public static boolean[] strToBoolArr(String str) {
+    public static boolean[] binaryStringToBoolArr(String str) {
         boolean[] result = new boolean[str.length()];
 
         for (int i = 0; i < result.length; i++){
@@ -129,5 +138,15 @@ public class Utility {
         }
         return array;
     }
+
+    public static String boolArrToString(boolean[] arr){
+        StringBuilder r = new StringBuilder();
+        for (boolean b : arr) {
+            if (b) r.append("1");
+            else r.append("0");
+        }
+        return r.toString();
+    }
+
 
 }

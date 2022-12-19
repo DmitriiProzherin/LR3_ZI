@@ -41,8 +41,8 @@ public class SecretKey {
     SecretKey(String initKey) {
         assert initKey.length() == 64 : "длина ключа должна быть в 64 бита";
 
-        this.init_64_key = strToBoolArr(initKey);
-        key_56_bit = initTransform(strToBoolArr(initKey));
+        this.init_64_key = binaryStringToBoolArr(initKey);
+        key_56_bit = initTransform(binaryStringToBoolArr(initKey));
 
         ArrayList<boolean[]> key_28_bit_arr = Utility.splitBlockIntoParts(key_56_bit, 2);
         Utility.shiftLeft(key_28_bit_arr.get(0), shiftLength(0));

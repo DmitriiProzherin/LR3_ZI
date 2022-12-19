@@ -1,7 +1,27 @@
+import Utilities.Utility;
+
+import java.util.ArrayList;
+
+import static Utilities.Utility.*;
+
 public class PlainText {
+    private final int tail;
+
+    private final ArrayList<boolean[]> blocksList;
 
     PlainText(String string) {
-
+        boolean[] binary = byteToBoolArr(strToByteArr(string));
+        tail = (64 - binary.length % 64) % 64;
+        boolean[] extBinary = new boolean[binary.length + tail];
+        System.arraycopy(binary, 0, extBinary, 0, binary.length);
+        blocksList = splitBlockIntoParts(extBinary, extBinary.length / 64);
     }
 
+    public ArrayList<boolean[]> getBlocksList() {
+        return blocksList;
+    }
+
+    public int getTail() {
+        return tail;
+    }
 }

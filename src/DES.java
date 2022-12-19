@@ -1,22 +1,42 @@
 import Utilities.Utility;
 
-import java.security.PublicKey;
 import java.util.ArrayList;
 
 import static Utilities.Utility.*;
 
 public class DES {
 
-    public String encrypt(PlainText text, SecretKey key) {
+    public String encrypt(String str, SecretKey key) {
+        PlainText text = new PlainText(str);
+        ArrayList<boolean[]> inBlocks = text.getBlocksList(), eBlocks = new ArrayList<>();
 
+        inBlocks.forEach(b -> eBlocks.add(encryptBlock(b, key)));
 
+        StringBuilder result = new StringBuilder();
 
+        eBlocks.forEach(b -> result.append(boolArrToString(b)));
 
-
-        return null;
+        return result.toString();
     }
 
+    public String decrypt(String str, SecretKey key) {
+
+        boolean[] bool = binaryStringToBoolArr(str);
+
+        ArrayList<boolean[]> inBlocks = splitBlockIntoParts(bool, bool.length / 64), dBlocks = new ArrayList<>();
+
+        inBlocks.forEach(b -> dBlocks.add(decryptBlock(b, key)));
+
+        StringBuilder result = new StringBuilder();
+
+        dBlocks.forEach(b -> result.append(boolArrToString(b)));
+
+        return result.toString();
+    }
+
+
     // Шифровка одного блока.
+
     public boolean[] encryptBlock(boolean[] inputBlock, SecretKey key) {
         assert inputBlock.length == 64 : "Длина одного кодируемого блока равна 64 бита.";
 
@@ -39,8 +59,9 @@ public class DES {
     }
 
     public boolean[] encryptBlock(String strBlock, SecretKey key){
-        return encryptBlock(strToBoolArr(strBlock), key);
+        return encryptBlock(binaryStringToBoolArr(strBlock), key);
     }
+    // дешифровка одного блока.
 
     public boolean[] decryptBlock(boolean[] inputBlock, SecretKey key) {
         assert inputBlock.length == 64 : "Длина одного декодируемого блока равна 64 бита.";
@@ -66,13 +87,8 @@ public class DES {
     }
 
     public boolean[] decryptBlock(String inputBlock, SecretKey key) {
-        boolean[] bool_input = strToBoolArr(inputBlock);
+        boolean[] bool_input = binaryStringToBoolArr(inputBlock);
         return decryptBlock(bool_input, key);
-    }
-
-    public String decrypt(PlainText text, SecretKey key) {
-
-        return null;
     }
 
     // Конечная перестановка, обратная начальной перестановке.
@@ -233,8 +249,6 @@ public class DES {
 
         return res;
     }
-
-
 
     // Расширение блока до размера в 48 бит.
     private boolean[] ext(boolean[] booleans) {
