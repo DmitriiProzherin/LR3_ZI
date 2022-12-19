@@ -4,8 +4,10 @@ import java.util.ArrayList;
 
 public class SecretKey {
 
+
     private final boolean[][] keysArr = new boolean[16][48];
-    private final boolean[] key_56_bit;
+    private boolean[] initKey;
+    private boolean[] key_56_bit;
     private boolean[][] cBlocks = new boolean[16][28];
     private boolean[][] dBlocks = new boolean[16][28];
 
@@ -14,7 +16,8 @@ public class SecretKey {
     SecretKey(boolean[] initKey) {
         assert initKey.length == 64 : "длина ключа должна быть в 64 бита";
 
-        key_56_bit = initTransform(initKey);
+        this.initKey = initKey;
+        key_56_bit = initTransform(this.initKey);
 
         ArrayList<boolean[]> key_28_bit_arr = Utility.splitBlockIntoParts(key_56_bit, 2);
         Utility.shiftLeft(key_28_bit_arr.get(0), shiftLength(0));
@@ -31,6 +34,12 @@ public class SecretKey {
 
         for (int i = 0; i < 16; i++) { keysArr[i] = finalTransform(Utility.concat(cBlocks[i], dBlocks[i]));}
 
+    }
+
+    SecretKey(String strKey) {
+        for (int i = 0; i < strKey.length(); i++) {
+            initKey[i] = (strKey.charAt(i) == '1');
+        }
     }
 
     private boolean[] initTransform(boolean[] in) {

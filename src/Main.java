@@ -8,17 +8,14 @@ public class Main {
         String messageBlock = "0000000100100011010001010110011110001001101010111100110111101111";
         String expectedEncryptedBlock = "1000010111101000000100110101010000001111000010101011010000000101";
 
-        boolean[] b_key = new boolean[64];
-        boolean[] b_message_block = new boolean[64];
 
+        boolean[] b_message_block = new boolean[64];
         for (int i = 0; i < strKey.length(); i++) {
-            b_key[i] = (strKey.charAt(i) == '1');
             b_message_block[i] = (messageBlock.charAt(i) == '1');
         }
 
 
-      //  PlainText text = new PlainText("abcdefgh");
-        SecretKey key = new SecretKey(b_key);
+        SecretKey key = new SecretKey(strKey);
         DES des = new DES();
 
 
