@@ -45,8 +45,6 @@ public class Utility {
 
     // Разбиение блока на n частей.
     public static ArrayList<boolean[]> splitBlockIntoParts(boolean[] block, int n) {
-       // assert block.length % 2 == 0 : "Длина блока должна быть чётной.";
-       // assert n % 2 == 0 : "Количество частей должно быть чётным.";
         assert n <= block.length : "Количество частей не должно превышать длину блока.";
 
         ArrayList<boolean[]> resultList = new ArrayList<>();
@@ -103,15 +101,6 @@ public class Utility {
         System.arraycopy(temp, 0, booleans, booleans.length - shiftLength, booleans.length - (booleans.length - shiftLength));
     }
 
-
-    public static String[] splitToBlocks(String str) {
-        int blocksAmount = str.length() / 8;
-        int addedAmount = str.length() - blocksAmount * 8;
-        String[] result = new String[blocksAmount];
-
-        return null;
-    }
-
     public static void printBoolArray(boolean[] arr) {
         for (boolean b : arr) {
             if (b) System.out.print("1");
@@ -128,15 +117,6 @@ public class Utility {
         }
         return result;
 
-    }
-
-    public static boolean[] invertArray(boolean[] array) {
-        for (int i = 0; i < array.length / 2; i++) {
-            boolean temp = array[i];
-            array[i] = array[array.length - 1 - i];
-            array[array.length - 1 - i] = temp;
-        }
-        return array;
     }
 
     public static String boolArrToString(boolean[] arr){
@@ -160,13 +140,6 @@ public class Utility {
         }
         if ((int) res == 0) return "";
         return ((char) res) + "";
-    }
-
-    private static int toInt(char c){
-        assert (c == '1') || (c == '0');
-
-        if (c == '1') return 1;
-        else return 0;
     }
 
     public static String formatedBoolStringtoString(String s){

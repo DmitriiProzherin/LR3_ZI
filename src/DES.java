@@ -55,8 +55,7 @@ public class DES {
             right[i] = xor(left[i - 1], feistel(right[i - 1], key.getKeysArr()[i - 1]));
         }
 
-        boolean result[] = FP(concat(right[16], left[16]));
-        return result;
+        return FP(concat(right[16], left[16]));
     }
 
     public boolean[] encryptBlock(String strBlock, SecretKey key){
@@ -82,9 +81,7 @@ public class DES {
             j--;
         }
 
-        boolean result[] = FP(concat(right[16], left[16]));
-
-        return result;
+        return FP(concat(right[16], left[16]));
     }
 
     public boolean[] decryptBlock(String inputBlock, SecretKey key) {
@@ -126,60 +123,25 @@ public class DES {
         return Utility.mix(inp, 64, permVector);
     }
 
-    // Выполнение одного раунда шифрования блока
-    private void cryptoRound(boolean [] left, boolean[] right, boolean[] rKey) {
-        assert left.length == 32 : "Длина левого блока на входе должна быть 32 бита.";
-        assert right.length == 32 : "Длина правого блока на входе должна быть 32 бита.";
-        assert rKey.length == 48 : "Длина ключа раунда должна быть 48 бит.";
-
-        boolean[] tempLeft = right.clone();
-        right = xor(left, feistel(right, rKey));
-        left = tempLeft;
-
-    }
 
     // Применение функции Фейстеля.
     private boolean[] feistel(boolean[] inBlock, boolean[] key) {
         assert inBlock.length == 32 : "Длина блока в функции Фейстеля должна быть 32 бита.";
         assert key.length == 48 : "Длина ключа в функции Фейстеля должна быть 48 бит.";
 
-      //  System.out.println("\nФункция фейстеля.");
-
-      //  System.out.println(inBlock.length + "-бит блок:");
-     //   printBoolArray(inBlock);
-
         boolean[] e = ext(inBlock);
-    //    System.out.println("\n" + e.length + "-бит расширение:");
-    //    printBoolArray(e);
-
-   //     System.out.println("\n"+key.length + "-бит ключ:");
-    //    printBoolArray(key);
-
-        boolean[] x = xor(e, key);
-    //    System.out.println("\n48-бит xor расширения и ключа:");
-   //     printBoolArray(x);
 
         ArrayList<boolean[]> blocks = splitBlockIntoParts(xor(e, key), 8);
 
-     //   System.out.println("\n8 блоков по 6 бит:");
-    //    blocks.forEach(Utility::printBoolArray);
-
         boolean[] res = null;
-    //    System.out.println("\n8 блоков по 4 бита:");
 
         for (boolean[] b :
                 blocks) {
             b = sTransform(b, blocks.indexOf(b));
             res = concat(res, b);
-          //  printBoolArray(b);
         }
 
-      //  System.out.println("\nСклеивание блоков по 4 бита. Длина: " + res.length);
-     //   printBoolArray(res);
-
-
-    //    System.out.println("\nПерестановка:");
-     //   printBoolArray(P(res));
+        assert res != null;
 
         return P(res);
     }

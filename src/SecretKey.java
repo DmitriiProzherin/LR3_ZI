@@ -9,9 +9,8 @@ public class SecretKey {
     private final boolean[] key_56_bit;
 
     private final boolean[] init_64_key;
-    private boolean[][] cBlocks = new boolean[16][28];
-    private boolean[][] dBlocks = new boolean[16][28];
-
+    private final boolean[][] cBlocks = new boolean[16][28];
+    private final boolean[][] dBlocks = new boolean[16][28];
 
 
     SecretKey(boolean[] initKey) {
@@ -106,26 +105,6 @@ public class SecretKey {
 
     public boolean[][] getKeysArr() {
         return keysArr;
-    }
-
-    public void printKeysArr() {
-        for (int i = 0; i < 16; i++) {
-            System.out.println("\n" + i + "-ый ключ. Длина равна 48 бит." );
-            for (int j = 0; j < 48; j++) {
-                if (keysArr[i][j]) System.out.print("1");
-                else System.out.print("0");
-            }
-            System.out.println();
-        }
-    }
-
-    public void print_56_bit_key() {
-        System.out.println("56-битный ключ после перестановки исходного ключа");
-        for (int i = 0; i < 56; i++) {
-            if (key_56_bit[i]) System.out.print("1");
-            else System.out.print("0");
-        }
-        System.out.println();
     }
 
     public boolean[] getInit_64_key() {
