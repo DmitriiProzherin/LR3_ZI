@@ -37,8 +37,7 @@ public class DES {
 
 
     // Шифровка одного блока.
-
-    public boolean[] encryptBlock(boolean[] inputBlock, SecretKey key) {
+    private boolean[] encryptBlock(boolean[] inputBlock, SecretKey key) {
         assert inputBlock.length == 64 : "Длина одного кодируемого блока равна 64 бита.";
 
         inputBlock = IP(inputBlock);
@@ -58,12 +57,12 @@ public class DES {
         return FP(concat(right[16], left[16]));
     }
 
-    public boolean[] encryptBlock(String strBlock, SecretKey key){
+    private boolean[] encryptBlock(String strBlock, SecretKey key){
         return encryptBlock(binaryStringToBoolArr(strBlock), key);
     }
     // дешифровка одного блока.
 
-    public boolean[] decryptBlock(boolean[] inputBlock, SecretKey key) {
+    private boolean[] decryptBlock(boolean[] inputBlock, SecretKey key) {
         assert inputBlock.length == 64 : "Длина одного декодируемого блока равна 64 бита.";
 
         inputBlock = IP(inputBlock);
@@ -84,7 +83,7 @@ public class DES {
         return FP(concat(right[16], left[16]));
     }
 
-    public boolean[] decryptBlock(String inputBlock, SecretKey key) {
+    private boolean[] decryptBlock(String inputBlock, SecretKey key) {
         boolean[] bool_input = binaryStringToBoolArr(inputBlock);
         return decryptBlock(bool_input, key);
     }
@@ -122,7 +121,6 @@ public class DES {
 
         return Utility.mix(inp, 64, permVector);
     }
-
 
     // Применение функции Фейстеля.
     private boolean[] feistel(boolean[] inBlock, boolean[] key) {
@@ -230,7 +228,6 @@ public class DES {
 
         return Utility.mix(booleans, 48, mixVector);
     }
-
 
     private byte[][] getSTable(int i) {
         assert i>=0 && i<=7 : "Индексы таблиц от 0 до 7.";
