@@ -1,18 +1,43 @@
+import Utilities.Utility;
+
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.util.Collections;
+
+import static Utilities.Utility.formatedBoolStringtoString;
 import static java.lang.System.out;
 
 public class Main {
-    public static void main(String[] args) {
-
-        String strKey = "0001001100110100010101110111100110011011101111001101111111110001";
-        String test = "Я написал шифратор и дешифратор!", encryptedString, decryptedString;
+    public static void main(String[] args) throws IOException {
 
         DES des = new DES();
 
-        encryptedString = des.encrypt(test, strKey);
-        decryptedString = des.decrypt(encryptedString, strKey);
+        Path inputPath = Path.of("src/input.txt");
+        Path keyPath = Path.of("src/key.txt");
+        Path outputPath = Path.of("src/output.txt");
+
+        String key = Files.readString(keyPath);
+        String test = Files.readString(inputPath);
+        String encryptedString, decryptedString;
+
+
+        BufferedWriter writer = new BufferedWriter(new FileWriter("src/output.txt"));
+        writer.write(des.encrypt(test, key));
+        writer.close();
+
+
+        encryptedString = Files.readString(outputPath);
+        decryptedString = des.decrypt(encryptedString, key);
+
+
 
         out.println("Inp: " + test);
-        out.println("Enc: " + encryptedString);
+        out.println("Enc: " + formatedBoolStringtoString(encryptedString));
         out.println("Dec: " + decryptedString);
 
     }
