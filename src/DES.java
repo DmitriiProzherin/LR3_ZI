@@ -20,65 +20,21 @@ public class DES {
     public boolean[] encryptBlock(boolean[] inputBlock, SecretKey key) {
         assert inputBlock.length == 64 : "Длина одного кодируемого блока равна 64 бита.";
 
-        //System.out.println("Массив из 16-ти ключей:");
-      //  key.printKeysArr();
-
-
-       // System.out.println("\nИсходный блок:");
-//        for (boolean b : inputBlock) {
-//            if (b) System.out.print("1");
-//            else System.out.print("0");
-//        }
-      //  System.out.println();
-
         inputBlock = IP(inputBlock);
-
-      //  System.out.println("\nИсходный блок после IP:");
-//        for (boolean b : inputBlock) {
-//            if (b) System.out.print("1");
-//            else System.out.print("0");
-//        }
-//        System.out.println();
 
         boolean[][] left = new boolean[17][];
         boolean[][] right = new boolean[17][];
 
 
         left[0] = Utility.getLeftPart(inputBlock);
-      //  System.out.println("\nL-0. Длина " + left[0].length + " бита.");
-//        for (boolean b : left[0]) {
-//            if (b) System.out.print("1");
-//            else System.out.print("0");
-//        }
-
         right[0] = Utility.getRightPart(inputBlock);
-//        System.out.println("\nR-0. Длина " + left[0].length + " бита.");
-//        for (boolean b : right[0]) {
-//            if (b) System.out.print("1");
-//            else System.out.print("0");
-//        }
 
         for (int i = 1; i<=16; i++) {
-            left[i] = right[i-1].clone();
-            //System.out.println("\nL-" + i + ". Длина " + left[i].length + " бита.");
-//            for (boolean b : left[i]) {
-//                if (b) System.out.print("1");
-//                else System.out.print("0");
-//            }
-
+            left[i] = right[i-1];
             right[i] = xor(left[i - 1], feistel(right[i - 1], key.getKeysArr()[i - 1]));
-          //  System.out.println("\nR-" + i + ". Длина " + right[i].length + " бита.");
-//            for (boolean b : right[i]) {
-//                if (b) System.out.print("1");
-//                else System.out.print("0");
-//            }
         }
 
         boolean result[] = FP(concat(right[16], left[16]));
-
-//        System.out.println("\n\nЗашифрованный блок:");
-//        printBoolArray(result);
-
         return result;
     }
 
@@ -87,13 +43,31 @@ public class DES {
     }
 
     public boolean[] decryptBlock(boolean[] inputBlock, SecretKey key) {
-        SecretKey rKey = new SecretKey(invertArray(key.getInit_64_key()));
-        return encryptBlock(inputBlock, rKey);
+        assert inputBlock.length == 64 : "Длина одного декодируемого блока равна 64 бита.";
+
+        inputBlock = IP(inputBlock);
+
+        boolean[][] left = new boolean[17][];
+        boolean[][] right = new boolean[17][];
+
+        left[0] = Utility.getLeftPart(inputBlock);
+        right[0] = Utility.getRightPart(inputBlock);
+
+        int j = 15;
+        for (int i = 1; i <= 16; i++) {
+            left[i] = right[i-1];
+            right[i] = xor(left[i - 1], feistel(right[i - 1], key.getKeysArr()[j]));
+            j--;
+        }
+
+        boolean result[] = FP(concat(right[16], left[16]));
+
+        return result;
     }
 
     public boolean[] decryptBlock(String inputBlock, SecretKey key) {
-        SecretKey rKey = new SecretKey(invertArray(key.getInit_64_key()));
-        return encryptBlock(inputBlock, rKey);
+        boolean[] bool_input = strToBoolArr(inputBlock);
+        return decryptBlock(bool_input, key);
     }
 
     public String decrypt(PlainText text, SecretKey key) {
