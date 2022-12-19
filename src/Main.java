@@ -1,5 +1,4 @@
-import java.util.ArrayList;
-import java.util.Arrays;
+import static Utilities.Utility.*;
 
 public class Main {
     public static void main(String[] args) {
@@ -9,19 +8,20 @@ public class Main {
         String expectedEncryptedBlock = "1000010111101000000100110101010000001111000010101011010000000101";
 
 
-        boolean[] b_message_block = new boolean[64];
-        for (int i = 0; i < strKey.length(); i++) {
-            b_message_block[i] = (messageBlock.charAt(i) == '1');
-        }
 
-
+      //  PlainText text = new PlainText("abcdefgh");
         SecretKey key = new SecretKey(strKey);
         DES des = new DES();
 
 
-
-        des.encryptBlock(b_message_block, key);
+        System.out.println("Результат шифрования блока:");
+        printBoolArray(des.encryptBlock(messageBlock, key));
+        System.out.println("Ожидаемый результат:");
         System.out.println(expectedEncryptedBlock);
+
+        printBoolArray(strToBoolArr(strKey));
+        printBoolArray(invertArray(strToBoolArr(strKey)));
+
 
        // des.decrypt(text, key);
 

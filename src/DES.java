@@ -19,66 +19,70 @@ public class DES {
     public boolean[] encryptBlock(boolean[] inputBlock, SecretKey key) {
         assert inputBlock.length == 64 : "Длина одного кодируемого блока равна 64 бита.";
 
-        System.out.println("Массив из 16-ти ключей:");
-        key.printKeysArr();
+        //System.out.println("Массив из 16-ти ключей:");
+      //  key.printKeysArr();
 
 
-        System.out.println("\nИсходный блок:");
-        for (boolean b : inputBlock) {
-            if (b) System.out.print("1");
-            else System.out.print("0");
-        }
-        System.out.println();
+       // System.out.println("\nИсходный блок:");
+//        for (boolean b : inputBlock) {
+//            if (b) System.out.print("1");
+//            else System.out.print("0");
+//        }
+      //  System.out.println();
 
         inputBlock = IP(inputBlock);
 
-        System.out.println("\nИсходный блок после IP:");
-        for (boolean b : inputBlock) {
-            if (b) System.out.print("1");
-            else System.out.print("0");
-        }
-        System.out.println();
+      //  System.out.println("\nИсходный блок после IP:");
+//        for (boolean b : inputBlock) {
+//            if (b) System.out.print("1");
+//            else System.out.print("0");
+//        }
+//        System.out.println();
 
         boolean[][] left = new boolean[17][];
         boolean[][] right = new boolean[17][];
 
 
         left[0] = Utility.getLeftPart(inputBlock);
-        System.out.println("\nL-0. Длина " + left[0].length + " бита.");
-        for (boolean b : left[0]) {
-            if (b) System.out.print("1");
-            else System.out.print("0");
-        }
+      //  System.out.println("\nL-0. Длина " + left[0].length + " бита.");
+//        for (boolean b : left[0]) {
+//            if (b) System.out.print("1");
+//            else System.out.print("0");
+//        }
 
         right[0] = Utility.getRightPart(inputBlock);
-        System.out.println("\nR-0. Длина " + left[0].length + " бита.");
-        for (boolean b : right[0]) {
-            if (b) System.out.print("1");
-            else System.out.print("0");
-        }
+//        System.out.println("\nR-0. Длина " + left[0].length + " бита.");
+//        for (boolean b : right[0]) {
+//            if (b) System.out.print("1");
+//            else System.out.print("0");
+//        }
 
         for (int i = 1; i<=16; i++) {
             left[i] = right[i-1].clone();
-            System.out.println("\nL-" + i + ". Длина " + left[i].length + " бита.");
-            for (boolean b : left[i]) {
-                if (b) System.out.print("1");
-                else System.out.print("0");
-            }
+            //System.out.println("\nL-" + i + ". Длина " + left[i].length + " бита.");
+//            for (boolean b : left[i]) {
+//                if (b) System.out.print("1");
+//                else System.out.print("0");
+//            }
 
             right[i] = xor(left[i - 1], feistel(right[i - 1], key.getKeysArr()[i - 1]));
-            System.out.println("\nR-" + i + ". Длина " + right[i].length + " бита.");
-            for (boolean b : right[i]) {
-                if (b) System.out.print("1");
-                else System.out.print("0");
-            }
+          //  System.out.println("\nR-" + i + ". Длина " + right[i].length + " бита.");
+//            for (boolean b : right[i]) {
+//                if (b) System.out.print("1");
+//                else System.out.print("0");
+//            }
         }
 
         boolean result[] = FP(concat(right[16], left[16]));
 
-        System.out.println("\n\nЗашифрованный блок:");
-        printBoolArray(result);
+//        System.out.println("\n\nЗашифрованный блок:");
+//        printBoolArray(result);
 
         return result;
+    }
+
+    public boolean[] encryptBlock(String strBlock, SecretKey key){
+        return encryptBlock(strToBoolArr(strBlock), key);
     }
 
     public String decrypt(PlainText text, SecretKey key) {
@@ -137,43 +141,43 @@ public class DES {
         assert inBlock.length == 32 : "Длина блока в функции Фейстеля должна быть 32 бита.";
         assert key.length == 48 : "Длина ключа в функции Фейстеля должна быть 48 бит.";
 
-        System.out.println("\nФункция фейстеля.");
+      //  System.out.println("\nФункция фейстеля.");
 
-        System.out.println(inBlock.length + "-бит блок:");
-        printBoolArray(inBlock);
+      //  System.out.println(inBlock.length + "-бит блок:");
+     //   printBoolArray(inBlock);
 
         boolean[] e = ext(inBlock);
-        System.out.println("\n" + e.length + "-бит расширение:");
-        printBoolArray(e);
+    //    System.out.println("\n" + e.length + "-бит расширение:");
+    //    printBoolArray(e);
 
-        System.out.println("\n"+key.length + "-бит ключ:");
-        printBoolArray(key);
+   //     System.out.println("\n"+key.length + "-бит ключ:");
+    //    printBoolArray(key);
 
         boolean[] x = xor(e, key);
-        System.out.println("\n48-бит xor расширения и ключа:");
-        printBoolArray(x);
+    //    System.out.println("\n48-бит xor расширения и ключа:");
+   //     printBoolArray(x);
 
         ArrayList<boolean[]> blocks = splitBlockIntoParts(xor(e, key), 8);
 
-        System.out.println("\n8 блоков по 6 бит:");
-        blocks.forEach(Utility::printBoolArray);
+     //   System.out.println("\n8 блоков по 6 бит:");
+    //    blocks.forEach(Utility::printBoolArray);
 
         boolean[] res = null;
-        System.out.println("\n8 блоков по 4 бита:");
+    //    System.out.println("\n8 блоков по 4 бита:");
 
         for (boolean[] b :
                 blocks) {
             b = sTransform(b, blocks.indexOf(b));
             res = concat(res, b);
-            printBoolArray(b);
+          //  printBoolArray(b);
         }
 
-        System.out.println("\nСклеивание блоков по 4 бита. Длина: " + res.length);
-        printBoolArray(res);
+      //  System.out.println("\nСклеивание блоков по 4 бита. Длина: " + res.length);
+     //   printBoolArray(res);
 
 
-        System.out.println("\nПерестановка:");
-        printBoolArray(P(res));
+    //    System.out.println("\nПерестановка:");
+     //   printBoolArray(P(res));
 
         return P(res);
     }

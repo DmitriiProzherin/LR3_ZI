@@ -1,13 +1,12 @@
 import Utilities.Utility;
+import static Utilities.Utility.*;
 
 import java.util.ArrayList;
 
 public class SecretKey {
 
-
     private final boolean[][] keysArr = new boolean[16][48];
-    private boolean[] initKey;
-    private boolean[] key_56_bit;
+    private final boolean[] key_56_bit;
     private boolean[][] cBlocks = new boolean[16][28];
     private boolean[][] dBlocks = new boolean[16][28];
 
@@ -16,8 +15,7 @@ public class SecretKey {
     SecretKey(boolean[] initKey) {
         assert initKey.length == 64 : "длина ключа должна быть в 64 бита";
 
-        this.initKey = initKey;
-        key_56_bit = initTransform(this.initKey);
+        key_56_bit = initTransform(initKey);
 
         ArrayList<boolean[]> key_28_bit_arr = Utility.splitBlockIntoParts(key_56_bit, 2);
         Utility.shiftLeft(key_28_bit_arr.get(0), shiftLength(0));
@@ -36,11 +34,29 @@ public class SecretKey {
 
     }
 
-    SecretKey(String strKey) {
-        for (int i = 0; i < strKey.length(); i++) {
-            initKey[i] = (strKey.charAt(i) == '1');
+    SecretKey(String initKey) {
+        assert initKey.length() == 64 : "длина ключа должна быть в 64 бита";
+
+        key_56_bit = initTransform(strToBoolArr(initKey));
+
+        ArrayList<boolean[]> key_28_bit_arr = Utility.splitBlockIntoParts(key_56_bit, 2);
+        Utility.shiftLeft(key_28_bit_arr.get(0), shiftLength(0));
+        Utility.shiftLeft(key_28_bit_arr.get(1), shiftLength(0));
+        cBlocks[0] = key_28_bit_arr.get(0);
+        dBlocks[0] = key_28_bit_arr.get(1);
+
+        for (int i = 1; i < 16; i++) {
+            cBlocks[i] = cBlocks[i - 1].clone();
+            dBlocks[i] = dBlocks[i - 1].clone();
+            Utility.shiftLeft(cBlocks[i], shiftLength(i));
+            Utility.shiftLeft(dBlocks[i], shiftLength(i));
         }
+
+        for (int i = 0; i < 16; i++) { keysArr[i] = finalTransform(Utility.concat(cBlocks[i], dBlocks[i]));}
+
     }
+
+
 
     private boolean[] initTransform(boolean[] in) {
         assert in.length == 64 : "Длина входного ключа для должна быть 64 бита.";

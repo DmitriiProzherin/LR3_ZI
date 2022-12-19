@@ -111,15 +111,23 @@ public class Utility {
         System.out.println();
     }
 
-    public static boolean[] glue(ArrayList<boolean[]> arr){
-        boolean[] result = null;
+    public static boolean[] strToBoolArr(String str) {
+        boolean[] result = new boolean[str.length()];
 
-        for (boolean[] b :
-                arr) {
-            result = concat(result, b);
+        for (int i = 0; i < result.length; i++){
+            result[i] = (str.charAt(i) == '1');
         }
-
         return result;
+
+    }
+
+    public static boolean[] invertArray(boolean[] array) {
+        for (int i = 0; i < array.length / 2; i++) {
+            boolean temp = array[i];
+            array[i] = array[array.length - 1 - i];
+            array[array.length - 1 - i] = temp;
+        }
+        return array;
     }
 
 }
