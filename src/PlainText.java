@@ -13,7 +13,7 @@ public class PlainText {
         boolean[] binary = byteToBoolArr(strToByteArr(string));
         tail = (64 - binary.length % 64) % 64;
         boolean[] extBinary = new boolean[binary.length + tail];
-        System.arraycopy(binary, 0, extBinary, 0, binary.length);
+        System.arraycopy(binary, 0, extBinary, tail, binary.length);
         blocksList = splitBlockIntoParts(extBinary, extBinary.length / 64);
     }
 

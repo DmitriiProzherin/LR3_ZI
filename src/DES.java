@@ -6,7 +6,8 @@ import static Utilities.Utility.*;
 
 public class DES {
 
-    public String encrypt(String str, SecretKey key) {
+    public String encrypt(String str, String strKey) {
+        SecretKey key = new SecretKey(strKey);
         PlainText text = new PlainText(str);
         ArrayList<boolean[]> inBlocks = text.getBlocksList(), eBlocks = new ArrayList<>();
 
@@ -19,8 +20,8 @@ public class DES {
         return result.toString();
     }
 
-    public String decrypt(String str, SecretKey key) {
-
+    public String decrypt(String str, String strKey) {
+        SecretKey key = new SecretKey(strKey);
         boolean[] bool = binaryStringToBoolArr(str);
 
         ArrayList<boolean[]> inBlocks = splitBlockIntoParts(bool, bool.length / 64), dBlocks = new ArrayList<>();
@@ -31,7 +32,7 @@ public class DES {
 
         dBlocks.forEach(b -> result.append(boolArrToString(b)));
 
-        return result.toString();
+        return formatedBoolStringtoString(result.toString());
     }
 
 
