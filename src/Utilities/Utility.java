@@ -53,6 +53,10 @@ public class Utility {
 
     // Конкатенация двух булевых массивов в 1 результирующий массив.
     public static boolean[] concat(boolean[] arr1, boolean[] arr2) {
+
+        if (arr1 == null) return arr2;
+        else if (arr2 == null) return arr1;
+
         boolean[] result = Arrays.copyOf(arr1, arr1.length + arr2.length);
         System.arraycopy(arr2, 0, result, arr1.length, arr2.length);
         return result;
@@ -106,4 +110,16 @@ public class Utility {
         }
         System.out.println();
     }
+
+    public static boolean[] glue(ArrayList<boolean[]> arr){
+        boolean[] result = null;
+
+        for (boolean[] b :
+                arr) {
+            result = concat(result, b);
+        }
+
+        return result;
+    }
+
 }
