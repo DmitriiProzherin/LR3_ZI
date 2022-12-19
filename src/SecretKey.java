@@ -7,6 +7,8 @@ public class SecretKey {
 
     private final boolean[][] keysArr = new boolean[16][48];
     private final boolean[] key_56_bit;
+
+    private final boolean[] init_64_key;
     private boolean[][] cBlocks = new boolean[16][28];
     private boolean[][] dBlocks = new boolean[16][28];
 
@@ -15,7 +17,9 @@ public class SecretKey {
     SecretKey(boolean[] initKey) {
         assert initKey.length == 64 : "длина ключа должна быть в 64 бита";
 
+        this.init_64_key = initKey;
         key_56_bit = initTransform(initKey);
+
 
         ArrayList<boolean[]> key_28_bit_arr = Utility.splitBlockIntoParts(key_56_bit, 2);
         Utility.shiftLeft(key_28_bit_arr.get(0), shiftLength(0));
@@ -37,6 +41,7 @@ public class SecretKey {
     SecretKey(String initKey) {
         assert initKey.length() == 64 : "длина ключа должна быть в 64 бита";
 
+        this.init_64_key = strToBoolArr(initKey);
         key_56_bit = initTransform(strToBoolArr(initKey));
 
         ArrayList<boolean[]> key_28_bit_arr = Utility.splitBlockIntoParts(key_56_bit, 2);
@@ -55,8 +60,6 @@ public class SecretKey {
         for (int i = 0; i < 16; i++) { keysArr[i] = finalTransform(Utility.concat(cBlocks[i], dBlocks[i]));}
 
     }
-
-
 
     private boolean[] initTransform(boolean[] in) {
         assert in.length == 64 : "Длина входного ключа для должна быть 64 бита.";
@@ -123,6 +126,10 @@ public class SecretKey {
             else System.out.print("0");
         }
         System.out.println();
+    }
+
+    public boolean[] getInit_64_key() {
+        return init_64_key;
     }
 
 }

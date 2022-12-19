@@ -1,5 +1,6 @@
 import Utilities.Utility;
 
+import java.security.PublicKey;
 import java.util.ArrayList;
 
 import static Utilities.Utility.*;
@@ -83,6 +84,16 @@ public class DES {
 
     public boolean[] encryptBlock(String strBlock, SecretKey key){
         return encryptBlock(strToBoolArr(strBlock), key);
+    }
+
+    public boolean[] decryptBlock(boolean[] inputBlock, SecretKey key) {
+        SecretKey rKey = new SecretKey(invertArray(key.getInit_64_key()));
+        return encryptBlock(inputBlock, rKey);
+    }
+
+    public boolean[] decryptBlock(String inputBlock, SecretKey key) {
+        SecretKey rKey = new SecretKey(invertArray(key.getInit_64_key()));
+        return encryptBlock(inputBlock, rKey);
     }
 
     public String decrypt(PlainText text, SecretKey key) {

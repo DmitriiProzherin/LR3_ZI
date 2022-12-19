@@ -13,15 +13,18 @@ public class Main {
         SecretKey key = new SecretKey(strKey);
         DES des = new DES();
 
+        System.out.println("\nШифровка блока:\n".toUpperCase());
 
+        System.out.println("Блок для шифровки:\n" + messageBlock);
         System.out.println("Результат шифрования блока:");
         printBoolArray(des.encryptBlock(messageBlock, key));
-        System.out.println("Ожидаемый результат:");
-        System.out.println(expectedEncryptedBlock);
+        System.out.println("Ожидаемый результат:\n" + expectedEncryptedBlock);
 
-        printBoolArray(strToBoolArr(strKey));
-        printBoolArray(invertArray(strToBoolArr(strKey)));
-
+        System.out.println("\nДешифровка блока:\n".toUpperCase());
+        System.out.println("Блок для дешифровки:\n" + expectedEncryptedBlock);
+        System.out.println("Результат дешифрования блока:");
+        printBoolArray(des.decryptBlock(expectedEncryptedBlock, key));
+        System.out.println("Ожидаемый результат:\n" + messageBlock);
 
        // des.decrypt(text, key);
 
