@@ -1,7 +1,9 @@
 package Utilities;
 
+import java.io.*;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Random;
 
 public class Utility {
 
@@ -151,6 +153,24 @@ public class Utility {
             res.append(string16ToSymbol(s.substring(i, i+16)));
         }
         return res.toString();
+    }
+
+    public static void generateRandomKey(String fileName){
+        boolean[] b = new boolean[64];
+        Random r = new Random();
+
+        for (int i = 0; i < 64; i++) {
+            b[i] = r.nextBoolean();
+        }
+
+        try {
+            BufferedWriter writer = new BufferedWriter(new FileWriter("src/key.txt"));
+            writer.write(boolArrToString(b));
+            writer.close();
+
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 
 }

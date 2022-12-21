@@ -1,14 +1,17 @@
 import java.io.*;
 
 import static Utilities.Utility.formatedBoolStringtoString;
+import static Utilities.Utility.generateRandomKey;
 import static java.lang.System.out;
 
 public class Main {
     public static void main(String[] args) throws IOException {
 
         DES des = new DES();
-        String inputString, key, encryptedString, decryptedString;
+        String inputString, encryptedString, decryptedString, key;
+        generateRandomKey("src/key.txt");
         long time;
+
 
         BufferedReader readerInput = new BufferedReader(new FileReader("src/input.txt"));
         inputString = readerInput.readLine();
