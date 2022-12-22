@@ -1,15 +1,11 @@
 import java.io.*;
 
-import static Utilities.Utility.formatedBoolStringtoString;
-import static Utilities.Utility.generateRandomKey;
-import static java.lang.System.out;
-
 public class Main {
     public static void main(String[] args) throws IOException {
 
     RSA rsa1 = new RSA();
 
-    rsa1.generate();
+    rsa1.generateKeys();
 
 //        DES des = new DES();
 //        String inputString, encryptedString, decryptedString, key;

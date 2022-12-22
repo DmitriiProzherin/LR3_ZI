@@ -1,3 +1,6 @@
+import java.io.BufferedWriter;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -27,8 +30,8 @@ public class RSA {
         return true;
     }
 
-    public ArrayList<BigInteger[]> generate(){
-        ArrayList<BigInteger[]> key_pars= new ArrayList<>();
+    public ArrayList<BigInteger[]> generateKeys(){
+        ArrayList<BigInteger[]> key_pairs= new ArrayList<>();
 
         this.p = generateRandomPrimeNumber();
         this.q = generateRandomPrimeNumber();
@@ -39,14 +42,31 @@ public class RSA {
         BigInteger e = calculate_e(euler_f_n);
         BigInteger d = get_d(e, euler_f_n);
 
-        key_pars.add(new BigInteger[] {e, n});
-        key_pars.add(new BigInteger[] {d, n});
+        key_pairs.add(new BigInteger[] {e, n});
+        key_pairs.add(new BigInteger[] {d, n});
 
-        System.out.println("Open key: " + Arrays.toString(key_pars.get(0)));
-        System.out.println("Secret key: " + Arrays.toString(key_pars.get(1)));
+        try {
+            BufferedWriter open_key_writer = new BufferedWriter(new FileWriter("src/public_key_pair"));
+            open_key_writer.write(Arrays.toString(key_pairs.get(0)));
+            open_key_writer.close();
+        } catch (IOException ex) {
+            throw new RuntimeException(ex);
+        }
+
+        try {
+            BufferedWriter private_key_writer = new BufferedWriter(new FileWriter("src/private_key_pair"));
+            private_key_writer.write(Arrays.toString(key_pairs.get(1)));
+            private_key_writer.close();
+        } catch (IOException ex) {
+            throw new RuntimeException(ex);
+        }
 
 
-        return key_pars;
+        System.out.println("Public key pair: " + Arrays.toString(key_pairs.get(0)));
+        System.out.println("Private key pair :" + Arrays.toString(key_pairs.get(1)));
+
+
+        return key_pairs;
     }
 
     private BigInteger get_d(BigInteger e, BigInteger f) {
