@@ -11,7 +11,7 @@ public class RSA {
     private final static long MINIMUM_PRIME_RANGE = (long) 1e8;
     private final static long MAXIMUM_PRIME_RANGE = (long) 1e9;
 
-    private long p, q;
+    private long max_block_length;
 
     private long generateRandomPrimeNumber(){
         Random r = new Random();
@@ -33,12 +33,12 @@ public class RSA {
     public ArrayList<BigInteger[]> generateKeys(){
         ArrayList<BigInteger[]> key_pairs= new ArrayList<>();
 
-        this.p = generateRandomPrimeNumber();
-        this.q = generateRandomPrimeNumber();
+        long p = generateRandomPrimeNumber();
+        long q = generateRandomPrimeNumber();
 
 
         BigInteger n = BigInteger.valueOf(p * q);
-        BigInteger euler_f_n = BigInteger.valueOf((p - 1) * (q-1));
+        BigInteger euler_f_n = BigInteger.valueOf((p - 1) * (q -1));
         BigInteger e = calculate_e(euler_f_n);
         BigInteger d = get_d(e, euler_f_n);
 
