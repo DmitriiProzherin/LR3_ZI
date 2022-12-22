@@ -7,7 +7,9 @@ import static java.lang.System.out;
 public class Main {
     public static void main(String[] args) throws IOException {
 
+    RSA rsa1 = new RSA();
 
+    rsa1.generate();
 
 //        DES des = new DES();
 //        String inputString, encryptedString, decryptedString, key;
